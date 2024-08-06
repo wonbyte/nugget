@@ -8,7 +8,6 @@
 
 #include "common.h" // IWYU pragma: keep
 #include "value.h"
-#include <stdint.h>
 
 /**
  * @enum OpCode
@@ -32,6 +31,7 @@ typedef enum {
 typedef struct {
     uint8_t* code;        /**< A series of instructions */
     ValueArray constants; /**< The constant pool for the array */
+    int* lines;           /**< The line number of the offending source code */
     int capacity;         /**< The number of elements allocated */
     int count;            /**< The number of elements in use */
 } Chunk;
@@ -55,8 +55,9 @@ void initChunk(Chunk* chunk);
  *
  * @param chunk A pointer to the Chunk to append the byte to.
  * @param byte The byte to append to the chunk.
+ * @param line The line number of the source code.
  */
-void writeChunk(Chunk* chunk, uint8_t byte);
+void writeChunk(Chunk* chunk, uint8_t byte, int line);
 
 /**
  * @brief Free the memory allocated for a Chunk.
