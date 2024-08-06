@@ -1,0 +1,10 @@
+# dirs
+.cache
+build
+docs
+
+# coverage
+default*.profraw
+
+# clangd
+compile_commands.json
