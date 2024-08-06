@@ -21,6 +21,21 @@ static int simpleInstruction(const char* name, int offset) {
     return offset + 1;
 }
 
+/**
+ * @brief Prints the name and details of a constant instruction and returns the
+ * next offset.
+ *
+ * This function prints the name and details of a constant instruction. It
+ * retrieves the constant index from the chunk's code array, prints the constant
+ * value, and then returns the offset of the next instruction in the chunk's
+ * code array.
+ *
+ * @param name A string representing the name of the instruction.
+ * @param chunk A pointer to the Chunk containing the instruction.
+ * @param offset The current offset of the instruction within the chunk's code
+ * array.
+ * @return The offset of the next instruction in the chunk's code array.
+ */
 static int constantInstruction(const char* name, Chunk* chunk, int offset) {
     uint8_t constant = chunk->code[offset + 1];
     printf("%-16s %4d '", name, constant);
@@ -31,10 +46,12 @@ static int constantInstruction(const char* name, Chunk* chunk, int offset) {
 
 int disassembleInstruction(Chunk* chunk, int offset) {
     printf("%04d ", offset);
-    if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1]) {
+
+    int currentLine = getLine(chunk, offset);
+    if (offset > 0 && currentLine == getLine(chunk, offset - 1)) {
         printf("   | ");
     } else {
-        printf("%4d ", chunk->lines[offset]);
+        printf("%4d ", currentLine);
     }
 
     uint8_t instruction = chunk->code[offset];

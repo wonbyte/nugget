@@ -21,6 +21,19 @@ typedef enum {
 } OpCode;
 
 /**
+ * @struct LineEncoding
+ * @brief Structure representing run-length encoded line numbers.
+ *
+ * This structure holds the line numbers and their run lengths.
+ */
+typedef struct {
+    int* lines;   /**< The line numbers */
+    int* counts;  /**< The run lengths of the lines */
+    int capacity; /**< The number of elements allocated */
+    int count;    /**< The number of elements in use */
+} LineEncoding;
+
+/**
  * @struct Chunk
  * @brief Structure representing a Chunk of bytecode.
  *
@@ -31,7 +44,7 @@ typedef enum {
 typedef struct {
     uint8_t* code;        /**< A series of instructions */
     ValueArray constants; /**< The constant pool for the array */
-    int* lines;           /**< The line number of the offending source code */
+    LineEncoding lines;   /**< Run-length encoded line numbers */
     int capacity;         /**< The number of elements allocated */
     int count;            /**< The number of elements in use */
 } Chunk;
@@ -80,5 +93,7 @@ void freeChunk(Chunk* chunk);
  * @return The index where the constant was appended.
  */
 int addConstant(Chunk* chunk, Value value);
+
+int getLine(Chunk* chunk, int instructionIndex);
 
 #endif // nugget_chunk_h
